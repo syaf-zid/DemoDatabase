@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -13,6 +15,10 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     Button btnInsert, btnGetTasks;
     TextView tvResults;
+    ListView lvTask;
+
+    ArrayAdapter aa;
+    ArrayList al;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         btnInsert = findViewById(R.id.buttonInsert);
         btnGetTasks = findViewById(R.id.buttonGetTasks);
         tvResults = findViewById(R.id.textViewResults);
+        lvTask = findViewById(R.id.listView);
 
         btnInsert.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Insert a task
                 ArrayList<String> data = db.getTaskContent();
+                al = db.getTask();
                 db.close();
 
                 String text = "";
@@ -50,8 +58,10 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("Database Content", i + ". " + data.get(i));
                     text += i + ". " + data.get(i) + "\n";
                 }
-
                 tvResults.setText(text);
+
+                aa = new CustomAdapter(MainActivity.this, R.layout.row, al);
+                lvTask.setAdapter(aa);
             }
         });
     }
